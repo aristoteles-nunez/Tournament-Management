@@ -4,6 +4,16 @@ Tournament administrator for a variety of games, it supports [Swiss-system tourn
 # What's included
 
 # Prerequisites
+## Installed software
+* `Python 3.x`
+* `PostgreSQL 9.0` or higher
+
+## Database
+In order to run the program you must create the database named `tournament` using the following sql command:
+
+```
+CREATE DATABASE tournament;
+```
 
 # Program Execution
 
