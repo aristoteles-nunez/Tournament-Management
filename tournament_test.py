@@ -5,7 +5,7 @@
 from tournament import *
 
 
-def test_delete_all_event():
+def test_delete_all_event(test_num):
     delete_all_events()
     c = count_events()
     if type(c) is not long:
@@ -13,9 +13,9 @@ def test_delete_all_event():
             "count_events() should return long value.")
     if c != 0:
         raise ValueError("After deleting, count_events should return zero.")
-    print ("All events can be deleted.")
+    print ("{}. All events can be deleted.").format(test_num)
     
-def test_register_event():
+def test_register_event(test_num):
     delete_all_events()
     register_event("Blitz Tournament", "2015/12/30")
     c = count_events()
@@ -25,21 +25,22 @@ def test_register_event():
     if c != 1:
         raise ValueError("After one event registered, count_events should \
             return one.")
-    print "After registering an event, count_events() returns 1."
+    print ("{}. After registering an event, count_events() returns 1.")\
+            .format(test_num)
 
 
-def test_delete_matches():
+def test_delete_matches(test_num):
     delete_matches()
-    print "1. Old matches can be deleted."
+    print ("{}. Old matches can be deleted.").format(test_num)
 
 
-def test_delete():
+def test_delete(test_num):
     delete_matches()
     delete_players()
-    print "2. Player records can be deleted."
+    print ("{}. Player records can be deleted.").format(test_num)
 
 
-def test_count():
+def test_count(test_num):
     delete_matches()
     delete_players()
     c = count_players()
@@ -48,10 +49,11 @@ def test_count():
             "count_players() should return numeric zero, not string '0'.")
     if c != 0:
         raise ValueError("After deleting, count_players should return zero.")
-    print "3. After deleting, count_players() returns zero."
+    print ("{}. After deleting, count_players() returns zero.")\
+            .format(test_num)
 
 
-def test_register():
+def test_register(test_num):
     delete_matches()
     delete_players()
     register_player("Chandra Nalaar")
@@ -59,10 +61,11 @@ def test_register():
     if c != 1:
         raise ValueError(
             "After one player registers, count_players() should be 1.")
-    print "4. After registering a player, count_players() returns 1."
+    print ("{}. After registering a player, count_players() returns \
+        1.").format(test_num)
 
 
-def test_register_count_delete():
+def test_register_count_delete(test_num):
     delete_matches()
     delete_players()
     register_player("Markov Chaney")
@@ -77,10 +80,10 @@ def test_register_count_delete():
     c = count_players()
     if c != 0:
         raise ValueError("After deleting, count_players should return zero.")
-    print "5. Players can be registered and deleted."
+    print ("{}. Players can be registered and deleted.").format(test_num)
 
 
-def test_standings_before_matches():
+def test_standings_before_matches(test_num):
     delete_matches()
     delete_players()
     register_player("Melpomene Murray")
@@ -100,10 +103,11 @@ def test_standings_before_matches():
     if set([name1, name2]) != set(["Melpomene Murray", "Randy Schwartz"]):
         raise ValueError("Registered players' names should appear in standings, "
                          "even if they have no matches played.")
-    print "6. Newly registered players appear in the standings with no matches."
+    print ("{}. Newly registered players appear in the standings with no \
+        matches.").format(test_num)
 
 
-def test_report_matches():
+def test_report_matches(test_num):
     delete_matches()
     delete_players()
     register_player("Bruno Walton")
@@ -122,10 +126,11 @@ def test_report_matches():
             raise ValueError("Each match winner should have one win recorded.")
         elif i in (id2, id4) and w != 0:
             raise ValueError("Each match loser should have zero wins recorded.")
-    print "7. After a match, players have updated standings."
+    print ("{}. After a match, players have updated standings.")\
+            .format(test_num)
 
 
-def test_pairings():
+def test_pairings(test_num):
     delete_matches()
     delete_players()
     register_player("Twilight Sparkle")
@@ -146,20 +151,31 @@ def test_pairings():
     if correct_pairs != actual_pairs:
         raise ValueError(
             "After one match, players with one win should be paired.")
-    print "8. After one match, players with one win are paired."
+    print ("{}. After one match, players with one win are paired.")\
+            .format(test_num)
 
 
 if __name__ == '__main__':
-    test_delete_all_event()
-    test_register_event()
-    #test_delete_matches()
-    #test_delete()
-    #test_count()
-    #test_register()
-    #test_register_count_delete()
-    #test_standings_before_matches()
-    #test_report_matches()
-    #test_pairings()
+    test_num = 1
+    test_delete_all_event(test_num)
+    test_num += 1
+    test_register_event(test_num)
+    test_num += 1
+    test_delete_matches(test_num)
+    test_num += 1
+    test_delete(test_num)
+    test_num += 1
+    test_count(test_num)
+    test_num += 1
+    test_register(test_num)
+    test_num += 1
+    test_register_count_delete(test_num)
+    test_num += 1
+    test_standings_before_matches(test_num)
+    test_num += 1
+    test_report_matches(test_num)
+    test_num += 1
+    test_pairings(test_num)
     print "Success!  All tests pass!"
 
 
