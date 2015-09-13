@@ -19,13 +19,18 @@ def crud_operation(operation, query, params, expected_rows):
     if operation == "read":
         rows = c.fetchone() if expected_rows == "one" else c.fetchall()
     else:
+        if operation == "create":
+            rows = c.fetchone()
         db.commit()
+        
     db.close()
     return rows;
 
 def delete_event(id):
     """Remove an event and all its related data from the database, without 
     erasing registered players."""
+    query = "DELETE FROM events WHERE id=%s"
+    crud_operation("delete", query, [id], None)
 
 def delete_all_events():
     """Remove all events and all their related data from the database, 
@@ -50,8 +55,9 @@ def register_event(name, event_date):
       name: the event's full name (need not be unique).
       event_date: this date could be in a future time.
     """
-    query = "INSERT INTO events (name, event_date) VALUES (%s, %s)"
-    crud_operation("create", query, [name, event_date], None)
+    query = "INSERT INTO events (name, event_date) VALUES (%s, %s) RETURNING id"
+    row = crud_operation("create", query, [name, event_date], None)
+    return row["id"]
 
 def count_events():
     """Returns the number of events currently registered."""
