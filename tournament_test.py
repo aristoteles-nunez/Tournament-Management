@@ -107,7 +107,8 @@ def test_delete_all_matches(test_num):
 
 def test_delete_matches_from_event(test_num):
     delete_all_events()
-    delete_matches_from_event()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
+    delete_matches_from_event(event_id)
     print ("{}. All matches from event can be deleted.").format(test_num)
 
 
