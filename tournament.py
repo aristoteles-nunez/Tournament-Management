@@ -46,6 +46,11 @@ def delete_all_matches():
     query = "DELETE FROM matches"
     crud_operation("delete", query, [], None, None)
 
+def delete_matches_from_event(event_id):
+    """Remove all the match records from an event."""
+    query = "DELETE FROM matches WHERE event=%s"
+    crud_operation("delete", query, [event_id], None, None)
+
 
 def delete_players():
     """Remove all the player records from the database."""
