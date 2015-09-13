@@ -22,7 +22,7 @@ def crud_operation(operation, query, params, expected_rows):
         if operation == "create":
             rows = c.fetchone()
         db.commit()
-        
+
     db.close()
     return rows;
 
@@ -45,6 +45,8 @@ def delete_matches():
 
 def delete_players():
     """Remove all the player records from the database."""
+    query = "DELETE FROM players"
+    crud_operation("delete", query, [], None)
 
 def register_event(name, event_date):
     """Adds a new event to the tournament database.
@@ -68,6 +70,9 @@ def count_events():
 
 def count_players():
     """Returns the number of players currently registered."""
+    query = "SELECT count(*) as num FROM players"
+    row =  crud_operation("read", query, [], "one")
+    return row["num"]
 
 
 def register_player(name):
