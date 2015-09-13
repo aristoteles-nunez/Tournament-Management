@@ -10,6 +10,9 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+def deleteEvent(id):
+    """Remove an event and all its related data from the database, without 
+    erasing registered players."""
 
 def deleteMatches():
     """Remove all the match records from the database."""
@@ -18,6 +21,15 @@ def deleteMatches():
 def deletePlayers():
     """Remove all the player records from the database."""
 
+def registerEvent(name, event_date):
+    """Adds a new event to the tournament database.
+  
+    The database assigns a unique serial id number for the event. 
+  
+    Args:
+      name: the event's full name (need not be unique).
+      event_date: this date could be in a future time.
+    """
 
 def countPlayers():
     """Returns the number of players currently registered."""
@@ -33,12 +45,11 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
 
-
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
+    The first entry in the list should be the player in first place, 
+    or a player tied for first place if there is currently a tie.
 
     Returns:
       A list of tuples, each of which contains (id, name, wins, matches):
