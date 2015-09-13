@@ -51,6 +51,20 @@ def test_delete_players(test_num):
         raise ValueError("After deleting, count_players should return zero.")
     print ("{}. All players can be deleted.").format(test_num)
 
+def test_register_player(test_num):
+    delete_players()
+    register_player("Aristoteles", "Nunez")
+    c = count_players()
+    if type(c) is not long:
+        raise TypeError(
+            "count_players() should return long value.")
+    if c != 1:
+        raise ValueError(
+            "After one player registers, count_players() should be 1.")
+    print ("{}. After registering a player, count_players() returns \
+        1.").format(test_num)
+
+
 def test_delete_matches(test_num):
     delete_all_events()
     event_id = register_event("Blitz Tournament", "2015/12/30")
@@ -184,6 +198,7 @@ if __name__ == '__main__':
     test_delete_one_event(2)
     test_register_event(3)
     test_delete_players(4)
+    test_register_player(5)
     test_delete_matches(5)
     test_delete(6)
     test_count(7)
