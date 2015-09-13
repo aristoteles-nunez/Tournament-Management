@@ -41,8 +41,19 @@ def test_register_event(test_num):
     print ("{}. After registering an event, count_events() returns 1.")\
             .format(test_num)
 
+def test_delete_players(test_num):
+    delete_players()
+    c = count_players()
+    if type(c) is not long:
+        raise TypeError(
+            "count_players() should return long value.")
+    if c != 0:
+        raise ValueError("After deleting, count_players should return zero.")
+    print ("{}. All players can be deleted.").format(test_num)
 
 def test_delete_matches(test_num):
+    delete_all_events()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
     delete_matches()
     print ("{}. Old matches can be deleted.").format(test_num)
 
@@ -172,14 +183,15 @@ if __name__ == '__main__':
     test_delete_all_event(1)
     test_delete_one_event(2)
     test_register_event(3)
-    test_delete_matches(4)
-    test_delete(5)
-    test_count(6)
-    test_register(7)
-    test_register_count_delete(8)
-    test_standings_before_matches(9)
-    test_report_matches(10)
-    test_pairings(11)
+    test_delete_players(4)
+    test_delete_matches(5)
+    test_delete(6)
+    test_count(7)
+    test_register(8)
+    test_register_count_delete(9)
+    test_standings_before_matches(10)
+    test_report_matches(11)
+    test_pairings(12)
     print "Success!  All tests pass!"
 
 
