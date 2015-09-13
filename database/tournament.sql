@@ -20,10 +20,10 @@ CREATE TABLE playersInEvent (
 );
 
 CREATE TABLE matches (
-	player_one_id INTEGER,
-	player_two_id INTEGER,
-	event_id INTEGER,
+	player_one INTEGER REFERENCES players(id),
+	player_two INTEGER REFERENCES players(id),
 	player_one_score DOUBLE PRECISION,
 	player_two_score DOUBLE PRECISION,
+	event INTEGER REFERENCES events(id),
 	round_number INTEGER
 );
