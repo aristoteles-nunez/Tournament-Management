@@ -75,15 +75,19 @@ def count_players():
     return row["num"]
 
 
-def register_player(name):
+def register_player(firstname, lastname):
     """Adds a player to the tournament database.
   
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
   
     Args:
-      name: the player's full name (need not be unique).
+      firstname: the player's firstname (need not be unique).
+      lastname: the player's lastname (need not be unique).
     """
+    query = "INSERT INTO players (firstname, lastname) VALUES (%s, %s) RETURNING id"
+    row = crud_operation("create", query, [firstname, lastname], None)
+    return row["id"]
 
 def player_standings():
     """Returns a list of the players and their win records, sorted by wins.
