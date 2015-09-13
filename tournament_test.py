@@ -81,6 +81,24 @@ def test_add_player_to_event(test_num):
             .format(test_num)
 
 
+def test_remove_player_from_event(test_num):
+    delete_all_events()
+    delete_players()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
+    player_id = register_player("Aristoteles", "Nunez")
+    add_player_to_event(event_id, player_id)
+    remove_player_from_event(event_id, player_id)
+    c = count_players_in_event(event_id)
+    if type(c) is not long:
+        raise TypeError(
+            "count_players() should return long value.")
+    if c != 0:
+        raise ValueError(
+            "count_players_in_event() should be 0.")
+    print ("{}. After removing a player, count_players_in_event() returns 0.")\
+            .format(test_num)
+
+
 def test_delete_matches(test_num):
     delete_all_events()
     event_id = register_event("Blitz Tournament", "2015/12/30")
@@ -216,6 +234,7 @@ if __name__ == '__main__':
     test_delete_players(4)
     test_register_player(5)
     test_add_player_to_event(6)
+    test_remove_player_from_event(7)
     test_delete_matches(5)
     test_delete(6)
     test_count(7)
