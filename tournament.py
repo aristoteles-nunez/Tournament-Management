@@ -11,7 +11,7 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
-def crud_operation(operation, query, params, expected_rows):
+def crud_operation(operation, query, params, expected_rows, return_id):
     rows = None
     db = connect()
     c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -19,7 +19,7 @@ def crud_operation(operation, query, params, expected_rows):
     if operation == "read":
         rows = c.fetchone() if expected_rows == "one" else c.fetchall()
     else:
-        if operation == "create":
+        if operation == "create" and return_id:
             rows = c.fetchone()
         db.commit()
 
@@ -30,13 +30,13 @@ def delete_event(id):
     """Remove an event and all its related data from the database, without 
     erasing registered players."""
     query = "DELETE FROM events WHERE id=%s"
-    crud_operation("delete", query, [id], None)
+    crud_operation("delete", query, [id], None, None)
 
 def delete_all_events():
     """Remove all events and all their related data from the database, 
     without erasing registered players."""
     query = "DELETE FROM events"
-    crud_operation("delete", query, [], None)
+    crud_operation("delete", query, [], None, None)
 
 
 def delete_matches():
@@ -46,7 +46,7 @@ def delete_matches():
 def delete_players():
     """Remove all the player records from the database."""
     query = "DELETE FROM players"
-    crud_operation("delete", query, [], None)
+    crud_operation("delete", query, [], None, None)
 
 def register_event(name, event_date):
     """Adds a new event to the tournament database.
@@ -58,20 +58,20 @@ def register_event(name, event_date):
       event_date: this date could be in a future time.
     """
     query = "INSERT INTO events (name, event_date) VALUES (%s, %s) RETURNING id"
-    row = crud_operation("create", query, [name, event_date], None)
+    row = crud_operation("create", query, [name, event_date], None, True)
     return row["id"]
 
 def count_events():
     """Returns the number of events currently registered."""
     query = "SELECT count(*) as num FROM events"
-    row =  crud_operation("read", query, [], "one")
+    row =  crud_operation("read", query, [], "one", None)
     return row["num"]
 
 
 def count_players():
     """Returns the number of players currently registered."""
     query = "SELECT count(*) as num FROM players"
-    row =  crud_operation("read", query, [], "one")
+    row =  crud_operation("read", query, [], "one", None)
     return row["num"]
 
 
@@ -86,8 +86,20 @@ def register_player(firstname, lastname):
       lastname: the player's lastname (need not be unique).
     """
     query = "INSERT INTO players (firstname, lastname) VALUES (%s, %s) RETURNING id"
-    row = crud_operation("create", query, [firstname, lastname], None)
+    row = crud_operation("create", query, [firstname, lastname], None, True)
     return row["id"]
+
+
+def add_player_to_event(event_id, player_id):
+    """Adds a player into an existing event.
+  
+    Args:
+      event_id: the id's event.
+      player_id: the id's player.
+    """
+    query = "INSERT INTO playersInEvent (event, player) VALUES (%s, %s)"
+    crud_operation("create", query, [event_id, player_id], None, False)
+
 
 def player_standings():
     """Returns a list of the players and their win records, sorted by wins.
