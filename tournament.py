@@ -35,6 +35,8 @@ def delete_event(id):
 def delete_all_events():
     """Remove all events and all their related data from the database, 
     without erasing registered players."""
+    query = "DELETE FROM playersInEvent"
+    crud_operation("delete", query, [], None, None)
     query = "DELETE FROM events"
     crud_operation("delete", query, [], None, None)
 
@@ -99,6 +101,12 @@ def add_player_to_event(event_id, player_id):
     """
     query = "INSERT INTO playersInEvent (event, player) VALUES (%s, %s)"
     crud_operation("create", query, [event_id, player_id], None, False)
+
+def count_players_in_event(event_id):
+    """Returns the number of players in an specified event."""
+    query = "SELECT count(*) as num FROM playersInEvent WHERE event=%s"
+    row =  crud_operation("read", query, [event_id], "one", None)
+    return row["num"]
 
 
 def player_standings():
