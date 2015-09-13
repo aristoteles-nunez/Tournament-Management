@@ -4,6 +4,7 @@
 #
 
 import psycopg2
+import psycopg2.extras
 
 
 def connect():
@@ -14,9 +15,16 @@ def delete_event(id):
     """Remove an event and all its related data from the database, without 
     erasing registered players."""
 
-def delete_all_events(id):
+def delete_all_events():
     """Remove all events and all their related data from the database, 
     without erasing registered players."""
+    db = connect()
+    c = db.cursor()
+    query = "DELETE FROM events"
+    c.execute(query)
+    db.commit()
+    db.close()
+
 
 def delete_matches():
     """Remove all the match records from the database."""
@@ -34,9 +42,23 @@ def register_event(name, event_date):
       name: the event's full name (need not be unique).
       event_date: this date could be in a future time.
     """
+    db = connect()
+    c = db.cursor()
+    query = "INSERT INTO events (name, event_date) VALUES (%s, %s)"
+    c.execute(query,[name,event_date])
+    db.commit()
+    db.close()
 
 def count_events():
     """Returns the number of events currently registered."""
+    db = connect()
+    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    #c = db.cursor()
+    query = "SELECT count(*) as num FROM events"
+    c.execute(query)
+    num = c.fetchone()["num"]
+    db.close()
+    return num
 
 
 def count_players():

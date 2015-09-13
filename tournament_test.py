@@ -8,9 +8,9 @@ from tournament import *
 def test_delete_all_event():
     delete_all_events()
     c = count_events()
-    if type(c) is not int:
+    if type(c) is not long:
         raise TypeError(
-            "count_events() should return numeric zero,.")
+            "count_events() should return long value.")
     if c != 0:
         raise ValueError("After deleting, count_events should return zero.")
     print ("All events can be deleted.")
@@ -19,12 +19,13 @@ def test_register_event():
     delete_all_events()
     register_event("Blitz Tournament", "2015/12/30")
     c = count_events()
-    if type(c) is not int:
+    if type(c) is not long:
         raise TypeError(
-            "count_events() should return a numeric value.")
+            "count_events() should return a long value.")
     if c != 1:
         raise ValueError("After one event registered, count_events should \
-            return zero.")
+            return one.")
+    print "After registering an event, count_events() returns 1."
 
 
 def test_delete_matches():
@@ -149,14 +150,16 @@ def test_pairings():
 
 
 if __name__ == '__main__':
-    test_delete_matches()
-    test_delete()
-    test_count()
-    test_register()
-    test_register_count_delete()
-    test_standings_before_matches()
-    test_report_matches()
-    test_pairings()
+    test_delete_all_event()
+    test_register_event()
+    #test_delete_matches()
+    #test_delete()
+    #test_count()
+    #test_register()
+    #test_register_count_delete()
+    #test_standings_before_matches()
+    #test_report_matches()
+    #test_pairings()
     print "Success!  All tests pass!"
 
 
