@@ -14,7 +14,20 @@ def test_delete_all_event(test_num):
     if c != 0:
         raise ValueError("After deleting, count_events should return zero.")
     print ("{}. All events can be deleted.").format(test_num)
-    
+
+def test_delete_one_event(test_num):
+    delete_all_events()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
+    delete_event(event_id)
+    event_id = register_event("Blitz Tournament2", "2015/12/30")
+    c = count_events()
+    if type(c) is not long:
+        raise TypeError(
+            "count_events() should return long value.")
+    if c != 1:
+        raise ValueError("After deleting, count_events should return one.")
+    print ("{}. One event can be deleted.").format(test_num)
+        
 def test_register_event(test_num):
     delete_all_events()
     register_event("Blitz Tournament", "2015/12/30")
@@ -156,26 +169,17 @@ def test_pairings(test_num):
 
 
 if __name__ == '__main__':
-    test_num = 1
-    test_delete_all_event(test_num)
-    test_num += 1
-    test_register_event(test_num)
-    test_num += 1
-    test_delete_matches(test_num)
-    test_num += 1
-    test_delete(test_num)
-    test_num += 1
-    test_count(test_num)
-    test_num += 1
-    test_register(test_num)
-    test_num += 1
-    test_register_count_delete(test_num)
-    test_num += 1
-    test_standings_before_matches(test_num)
-    test_num += 1
-    test_report_matches(test_num)
-    test_num += 1
-    test_pairings(test_num)
+    test_delete_all_event(1)
+    test_delete_one_event(2)
+    test_register_event(3)
+    test_delete_matches(4)
+    test_delete(5)
+    test_count(6)
+    test_register(7)
+    test_register_count_delete(8)
+    test_standings_before_matches(9)
+    test_report_matches(10)
+    test_pairings(11)
     print "Success!  All tests pass!"
 
 
