@@ -11,6 +11,18 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+def crud_operation(operation, query, params, expected_rows):
+    rows = None
+    db = connect()
+    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    c.execute(query, params)
+    if operation == "read":
+        rows = c.fetchone() if expected_rows == "one" else c.fetchall()
+    else:
+        db.commit()
+    db.close()
+    return rows;
+
 def delete_event(id):
     """Remove an event and all its related data from the database, without 
     erasing registered players."""
@@ -18,12 +30,8 @@ def delete_event(id):
 def delete_all_events():
     """Remove all events and all their related data from the database, 
     without erasing registered players."""
-    db = connect()
-    c = db.cursor()
     query = "DELETE FROM events"
-    c.execute(query)
-    db.commit()
-    db.close()
+    crud_operation("delete", query, [], None)
 
 
 def delete_matches():
@@ -42,23 +50,14 @@ def register_event(name, event_date):
       name: the event's full name (need not be unique).
       event_date: this date could be in a future time.
     """
-    db = connect()
-    c = db.cursor()
     query = "INSERT INTO events (name, event_date) VALUES (%s, %s)"
-    c.execute(query,[name,event_date])
-    db.commit()
-    db.close()
+    crud_operation("create", query, [name, event_date], None)
 
 def count_events():
     """Returns the number of events currently registered."""
-    db = connect()
-    c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
-    #c = db.cursor()
     query = "SELECT count(*) as num FROM events"
-    c.execute(query)
-    num = c.fetchone()["num"]
-    db.close()
-    return num
+    row =  crud_operation("read", query, [], "one")
+    return row["num"]
 
 
 def count_players():
