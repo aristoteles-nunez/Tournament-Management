@@ -4,6 +4,29 @@
 
 from tournament import *
 
+
+def test_delete_all_event():
+    delete_all_events()
+    c = count_events()
+    if type(c) is not int:
+        raise TypeError(
+            "count_events() should return numeric zero,.")
+    if c != 0:
+        raise ValueError("After deleting, count_events should return zero.")
+    print ("All events can be deleted.")
+    
+def test_register_event():
+    delete_all_events()
+    register_event("Blitz Tournament", "2015/12/30")
+    c = count_events()
+    if type(c) is not int:
+        raise TypeError(
+            "count_events() should return a numeric value.")
+    if c != 1:
+        raise ValueError("After one event registered, count_events should \
+            return zero.")
+
+
 def test_delete_matches():
     delete_matches()
     print "1. Old matches can be deleted."

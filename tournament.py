@@ -14,6 +14,10 @@ def delete_event(id):
     """Remove an event and all its related data from the database, without 
     erasing registered players."""
 
+def delete_all_events(id):
+    """Remove all events and all their related data from the database, 
+    without erasing registered players."""
+
 def delete_matches():
     """Remove all the match records from the database."""
 
@@ -21,7 +25,7 @@ def delete_matches():
 def delete_players():
     """Remove all the player records from the database."""
 
-def registerEvent(name, event_date):
+def register_event(name, event_date):
     """Adds a new event to the tournament database.
   
     The database assigns a unique serial id number for the event. 
@@ -30,6 +34,10 @@ def registerEvent(name, event_date):
       name: the event's full name (need not be unique).
       event_date: this date could be in a future time.
     """
+
+def count_events():
+    """Returns the number of events currently registered."""
+
 
 def count_players():
     """Returns the number of players currently registered."""
