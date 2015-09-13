@@ -98,12 +98,10 @@ def test_remove_player_from_event(test_num):
     print ("{}. After removing a player, count_players_in_event() returns 0.")\
             .format(test_num)
 
-
-def test_delete_matches(test_num):
+def test_delete_all_matches(test_num):
     delete_all_events()
-    event_id = register_event("Blitz Tournament", "2015/12/30")
-    delete_matches()
-    print ("{}. Old matches can be deleted.").format(test_num)
+    delete_all_matches()
+    print ("{}. All matches can be deleted.").format(test_num)
 
 
 def test_delete(test_num):
@@ -235,7 +233,7 @@ if __name__ == '__main__':
     test_register_player(5)
     test_add_player_to_event(6)
     test_remove_player_from_event(7)
-    test_delete_matches(5)
+    test_delete_all_matches(5)
     test_delete(6)
     test_count(7)
     test_register(8)
