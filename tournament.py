@@ -102,6 +102,18 @@ def add_player_to_event(event_id, player_id):
     query = "INSERT INTO playersInEvent (event, player) VALUES (%s, %s)"
     crud_operation("create", query, [event_id, player_id], None, False)
 
+
+def remove_player_from_event(event_id, player_id):
+    """Removes a single player from an existing event.
+  
+    Args:
+      event_id: the id's event.
+      player_id: the id's player.
+    """
+    query = "DELETE FROM playersInEvent WHERE event=%s AND player=%s"
+    crud_operation("delete", query, [event_id, player_id], None, False)
+
+
 def count_players_in_event(event_id):
     """Returns the number of players in an specified event."""
     query = "SELECT count(*) as num FROM playersInEvent WHERE event=%s"
