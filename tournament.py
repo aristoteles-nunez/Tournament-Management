@@ -8,10 +8,30 @@ import psycopg2.extras
 
 
 def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
+    """Connect to the PostgreSQL database.  
+
+    Returns:
+      A database connection."""
     return psycopg2.connect("dbname=tournament")
 
-def crud_operation(is_proc, operation, query, params, expected_rows, has_return_id):
+
+def crud_operation(is_proc, operation, query, params, expected_rows, 
+                    has_return_id):
+    """Perform CRUD operations on database
+
+   Args:
+      is_proc: True if we call a stored procedure
+      operation: create, read, update, delete  according to database operation
+      query: SQL query statement
+      params: Array with params for query either stored procedure or query
+      expected_rows: 'one' or 'many' if we expect a single row or multiple
+      has_return_id: True if we make an INSERT and the new id must return
+    Returns:
+      None: If the operation does not generate any result
+      row: If a single row is returned, it can be the generated key 
+           from last INSERT
+      rows: If multiple rows are returned
+    """
     rows = None
     db = connect()
     c = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
@@ -28,11 +48,17 @@ def crud_operation(is_proc, operation, query, params, expected_rows, has_return_
     db.close()
     return rows;
 
-def delete_event(id):
+
+def delete_event(event_id):
     """Remove an event and all its related data from the database, without 
-    erasing registered players."""
+    erasing registered players.
+
+    Args:
+      event_id: the id's event.
+    """
     query = "DELETE FROM events WHERE id=%s"
-    crud_operation(False, "delete", query, [id], None, None)
+    crud_operation(False, "delete", query, [event_id], None, None)
+
 
 def delete_all_events():
     """Remove all events and all their related data from the database, 
@@ -50,8 +76,13 @@ def delete_all_matches():
     query = "DELETE FROM matches"
     crud_operation(False, "delete", query, [], None, None)
 
+
 def delete_matches_from_event(event_id):
-    """Remove all the match records from an event."""
+    """Remove all the match records from an event.\
+
+    Args:
+      event_id: the id's event.
+    """
     query = "DELETE FROM matches WHERE event=%s"
     crud_operation(False, "delete", query, [event_id], None, None)
 
@@ -61,6 +92,7 @@ def delete_players():
     query = "DELETE FROM players"
     crud_operation(False, "delete", query, [], None, None)
 
+
 def register_event(name, event_date):
     """Adds a new event to the tournament database.
   
@@ -69,20 +101,33 @@ def register_event(name, event_date):
     Args:
       name: the event's full name (need not be unique).
       event_date: this date could be in a future time.
+    Returns:
+      id: Key created from last INSERT
     """
-    query = "INSERT INTO events (name, event_date) VALUES (%s, %s) RETURNING id"
-    row = crud_operation(False, "create", query, [name, event_date], None, True)
+    query = "INSERT INTO events (name, event_date) \
+             VALUES (%s, %s) RETURNING id"
+    row = crud_operation(False, "create", query, [name, event_date],
+                         None, True)
     return row["id"]
 
+
 def count_events():
-    """Returns the number of events currently registered."""
+    """Returns the number of events currently registered.
+
+    Returns:
+      num: Total number of events in the database
+    """
     query = "SELECT count(*) as num FROM events"
     row =  crud_operation(False, "read", query, [], "one", None)
     return row["num"]
 
 
 def count_players():
-    """Returns the number of players currently registered."""
+    """Returns the number of players currently registered.
+
+    Returns:
+      num: Total number of players registered in the database
+    """
     query = "SELECT count(*) as num FROM players"
     row =  crud_operation(False, "read", query, [], "one", None)
     return row["num"]
@@ -97,9 +142,13 @@ def register_player(firstname, lastname):
     Args:
       firstname: the player's firstname (need not be unique).
       lastname: the player's lastname (need not be unique).
+    Returns:
+      id: Key created from last INSERT
     """
-    query = "INSERT INTO players (firstname, lastname) VALUES (%s, %s) RETURNING id"
-    row = crud_operation(False, "create", query, [firstname, lastname], None, True)
+    query = "INSERT INTO players (firstname, lastname) \
+             VALUES (%s, %s) RETURNING id"
+    row = crud_operation(False, "create", query, [firstname, lastname],
+                         None, True)
     return row["id"]
 
 
@@ -126,7 +175,13 @@ def remove_player_from_event(event_id, player_id):
 
 
 def count_players_in_event(event_id):
-    """Returns the number of players in an specified event."""
+    """Returns the number of players in an specified event.
+
+    Args:
+      event_id: the id's event.
+    Returns:
+      num: Number of players in the event
+    """
     query = "SELECT count(*) as num FROM playersInEvent WHERE event=%s"
     row =  crud_operation(False, "read", query, [event_id], "one", None)
     return row["num"]
@@ -141,7 +196,6 @@ def player_standings(event_id):
 
    Args:
       event_id: the id's event.
- 
     Returns:
       A list of tuples, each of which contains (id, name, points, matches):
         id: the player's unique id (assigned by the database)
@@ -168,9 +222,11 @@ def report_match(event_id, round_number, player_one_id, player_one_points,
       player_two_points: Number of points obtained in this match
     """
     query = "INSERT INTO matches (player_one, player_two, player_one_score, \
-        player_two_score, event, round_number) VALUES (%s, %s, %s, %s, %s, %s)"
-    crud_operation(False, "create", query, [player_one_id, player_two_id, player_one_points,
-        player_two_points, event_id, round_number], None, False)
+             player_two_score, event, round_number) \
+             VALUES (%s, %s, %s, %s, %s, %s)"
+    crud_operation(False, "create", query, [player_one_id, player_two_id, 
+        player_one_points, player_two_points, event_id, round_number],
+        None, False)
  
  
 def swiss_pairings(event_id):
@@ -180,7 +236,8 @@ def swiss_pairings(event_id):
     appears exactly once in the pairings.  Each player is paired with another
     player with an equal or nearly-equal win record, that is, a player adjacent
     to him or her in the standings.
-  
+    Args:
+      event_id: the id's event.
     Returns:
       A list of tuples, each of which contains (id1, name1, id2, name2)
         id1: the first player's unique id
