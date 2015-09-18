@@ -42,6 +42,7 @@ def test_register_event(test_num):
             .format(test_num)
 
 def test_delete_players(test_num):
+    delete_all_events()
     delete_players()
     c = count_players()
     if type(c) is not long:
@@ -52,6 +53,7 @@ def test_delete_players(test_num):
     print ("{}. All players can be deleted.").format(test_num)
 
 def test_register_player(test_num):
+    delete_all_events()
     delete_players()
     register_player("Aristoteles", "Nunez")
     c = count_players()
@@ -104,52 +106,20 @@ def test_delete_all_matches(test_num):
     print ("{}. All matches can be deleted.").format(test_num)
 
 
-
 def test_delete_matches_from_event(test_num):
     delete_all_events()
     event_id = register_event("Blitz Tournament", "2015/12/30")
     delete_matches_from_event(event_id)
     print ("{}. All matches from event can be deleted.").format(test_num)
 
-
-def test_delete(test_num):
-    delete_matches()
-    delete_players()
-    print ("{}. Player records can be deleted.").format(test_num)
-
-
-def test_count(test_num):
-    delete_matches()
-    delete_players()
-    c = count_players()
-    if c == '0':
-        raise TypeError(
-            "count_players() should return numeric zero, not string '0'.")
-    if c != 0:
-        raise ValueError("After deleting, count_players should return zero.")
-    print ("{}. After deleting, count_players() returns zero.")\
-            .format(test_num)
-
-
-def test_register(test_num):
-    delete_matches()
-    delete_players()
-    register_player("Chandra Nalaar")
-    c = count_players()
-    if c != 1:
-        raise ValueError(
-            "After one player registers, count_players() should be 1.")
-    print ("{}. After registering a player, count_players() returns \
-        1.").format(test_num)
-
-
 def test_register_count_delete(test_num):
-    delete_matches()
+    delete_all_events()
+    delete_all_matches()
     delete_players()
-    register_player("Markov Chaney")
-    register_player("Joe Malik")
-    register_player("Mao Tsu-hsi")
-    register_player("Atlanta Hope")
+    register_player("Markov", "Chaney")
+    register_player("Joe", "Malik")
+    register_player("Mao", "Tsu-hsi")
+    register_player("Atlanta", "Hope")
     c = count_players()
     if c != 4:
         raise ValueError(
@@ -162,11 +132,17 @@ def test_register_count_delete(test_num):
 
 
 def test_standings_before_matches(test_num):
-    delete_matches()
+    delete_all_events()
+    delete_all_matches()
     delete_players()
-    register_player("Melpomene Murray")
-    register_player("Randy Schwartz")
-    standings = player_standings()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
+    player1_id = register_player("Melpomene", "Murray")
+    player2_id = register_player("Randy", "Schwartz")
+    player3_id = register_player("Aristoteles", "Nunez")
+    player4_id = register_player("Gary", "Nunez")
+    add_player_to_event(event_id, player1_id)
+    add_player_to_event(event_id, player4_id)
+    standings = player_standings(event_id)
     if len(standings) < 2:
         raise ValueError("Players should appear in player_standings even before "
                          "they have played any matches.")
@@ -178,11 +154,11 @@ def test_standings_before_matches(test_num):
     if matches1 != 0 or matches2 != 0 or wins1 != 0 or wins2 != 0:
         raise ValueError(
             "Newly registered players should have no matches or wins.")
-    if set([name1, name2]) != set(["Melpomene Murray", "Randy Schwartz"]):
+    if set([name1, name2]) != set(["Melpomene Murray", "Gary Nunez"]):
         raise ValueError("Registered players' names should appear in standings, "
                          "even if they have no matches played.")
-    print ("{}. Newly registered players appear in the standings with no \
-        matches.").format(test_num)
+    print ("{}. Newly registered players appear in the standings with no matches.")\
+            .format(test_num)
 
 
 def test_report_matches(test_num):
@@ -243,13 +219,10 @@ if __name__ == '__main__':
     test_remove_player_from_event(7)
     test_delete_all_matches(8)
     test_delete_matches_from_event(9)
-    test_delete(6)
-    test_count(7)
-    test_register(8)
-    test_register_count_delete(9)
-    test_standings_before_matches(10)
-    test_report_matches(11)
-    test_pairings(12)
+    test_register_count_delete(10)
+    test_standings_before_matches(11)
+    test_report_matches(12)
+    test_pairings(13)
     print "Success!  All tests pass!"
 
 
