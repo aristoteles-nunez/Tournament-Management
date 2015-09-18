@@ -220,6 +220,81 @@ def test_pairings(test_num):
     print ("{}. After one match, players with one win are paired.")\
             .format(test_num)
 
+def test_tournament (test_num):
+    delete_all_events()
+    delete_all_matches()
+    delete_players()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
+    player1_id = register_player("Twilight", "Sparkle")
+    player2_id = register_player("Flutter", "Shy")
+    player3_id = register_player("Aristoteles", "Nunez")
+    player4_id = register_player("Gary", "Nunez")
+    player5_id = register_player("Federico", "Juarez")
+    player6_id = register_player("Sahadi", "Urbina")
+    player7_id = register_player("Itzel", "Lopez")
+    player8_id = register_player("Vladimir", "Kramnik")
+    player9_id = register_player("Bobby", "Fisher")
+    player10_id = register_player("Magnus", "Carlsen")
+    player11_id = register_player("Emanuel", "Lasker")
+    player12_id = register_player("Raul", "Capablanca")
+    player13_id = register_player("Boris", "Spasky")
+    player14_id = register_player("Anand", "Viswanathan")
+    player15_id = register_player("Gary", "Kasparov")
+    player16_id = register_player("Anatoli", "Karpov")
+    add_player_to_event(event_id, player1_id)
+    add_player_to_event(event_id, player2_id)
+    add_player_to_event(event_id, player3_id)
+    add_player_to_event(event_id, player4_id)
+    add_player_to_event(event_id, player5_id)
+    add_player_to_event(event_id, player6_id)
+    add_player_to_event(event_id, player7_id)
+    add_player_to_event(event_id, player8_id)
+    add_player_to_event(event_id, player9_id)
+    add_player_to_event(event_id, player10_id)
+    add_player_to_event(event_id, player11_id)
+    add_player_to_event(event_id, player12_id)
+    add_player_to_event(event_id, player13_id)
+    add_player_to_event(event_id, player14_id)
+    add_player_to_event(event_id, player15_id)
+    add_player_to_event(event_id, player16_id)
+    standings = player_standings(event_id)
+    #print ("\n{}\n".format(standings))
+    pairings = swiss_pairings(event_id)
+    for pair in pairings:
+        (id1, name1, id2, name2) = pair
+        report_match(event_id, 1, id1, 1.0, id2, 0.0)
+    standings = player_standings(event_id)
+    #print ("\n{}\n".format(standings))
+    pairings = swiss_pairings(event_id)
+    for pair in pairings:
+        (id1, name1, id2, name2) = pair
+        report_match(event_id, 2, id1, 1.0, id2, 0.0)
+    standings = player_standings(event_id)
+    #print ("\n{}\n".format(standings))
+    pairings = swiss_pairings(event_id)
+    for pair in pairings:
+        (id1, name1, id2, name2) = pair
+        report_match(event_id, 3, id1, 1.0, id2, 0.0)
+    standings = player_standings(event_id)
+    #print ("\n{}\n".format(standings))
+    pairings = swiss_pairings(event_id)
+    for pair in pairings:
+        (id1, name1, id2, name2) = pair
+        report_match(event_id, 4, id1, 0.0, id2, 1.0)
+    standings = player_standings(event_id)
+    #print ("\n{}\n".format(standings))
+    for (i, n, p, m) in standings:
+        if m != 4:
+            raise ValueError("Each player should have 4 matches recorded.")
+    (i1, n1, p1, m1) = standings[0]
+    (i16, n16, p16, m16) = standings[len(standings)-1]
+    if p1 < 4.0:
+        raise ValueError("In this case winner must have 4 points")
+    if p16 > 0.0:
+        raise ValueError("In this case the last player must have 0 points")
+    print ("{}. After 4 rounds we have a winner")\
+            .format(test_num)
+
 
 if __name__ == '__main__':
     test_delete_all_event(1)
@@ -235,6 +310,7 @@ if __name__ == '__main__':
     test_standings_before_matches(11)
     test_report_matches(12)
     test_pairings(13)
+    test_tournament (14)
     print "Success!  All tests pass!"
 
 
