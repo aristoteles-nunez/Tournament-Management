@@ -149,11 +149,8 @@ def player_standings(event_id):
         points: the number of matches the player has won
         matches: the number of matches the player has played
     """
-
     procedure = "standings"
     rows =  crud_operation(True, "read", procedure, [event_id], "all", None)
-    #print ("standings:")
-    #print (rows)
     return rows
 
 
@@ -176,7 +173,7 @@ def report_match(event_id, round_number, player_one_id, player_one_points,
         player_two_points, event_id, round_number], None, False)
  
  
-def swiss_pairings():
+def swiss_pairings(event_id):
     """Returns a list of pairs of players for the next round of a match.
   
     Assuming that there are an even number of players registered, each player
@@ -191,5 +188,13 @@ def swiss_pairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    standings = player_standings(event_id)
+    pairings = []
+    for i in range (0, len(standings), 2):
+        (id1, name1, points1, matches1) = standings[i]
+        (id2, name2, points2, matches2) = standings[i+1]
+        pairings.append((id1, name1, id2, name2))
+    return pairings
+
 
 
