@@ -162,23 +162,29 @@ def test_standings_before_matches(test_num):
 
 
 def test_report_matches(test_num):
-    delete_matches()
+    delete_all_events()
+    delete_all_matches()
     delete_players()
-    register_player("Bruno Walton")
-    register_player("Boots O'Neal")
-    register_player("Cathy Burton")
-    register_player("Diane Grant")
-    standings = player_standings()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
+    player1_id = register_player("Melpomene", "Murray")
+    player2_id = register_player("Randy", "Schwartz")
+    player3_id = register_player("Aristoteles", "Nunez")
+    player4_id = register_player("Gary", "Nunez")
+    add_player_to_event(event_id, player1_id)
+    add_player_to_event(event_id, player2_id)
+    add_player_to_event(event_id, player3_id)
+    add_player_to_event(event_id, player4_id)
+    standings = player_standings(event_id)
     [id1, id2, id3, id4] = [row[0] for row in standings]
-    report_match(id1, id2)
-    report_match(id3, id4)
-    standings = player_standings()
+    report_match(event_id, 1, id1, 1.0, id2, 0.0)
+    report_match(event_id, 1, id3, 0.0, id4, 1.0)
+    standings = player_standings(event_id)
     for (i, n, w, m) in standings:
         if m != 1:
             raise ValueError("Each player should have one match recorded.")
-        if i in (id1, id3) and w != 1:
+        if i in (id1, id4) and w < 1:
             raise ValueError("Each match winner should have one win recorded.")
-        elif i in (id2, id4) and w != 0:
+        elif i in (id2, id3) and w > 0:
             raise ValueError("Each match loser should have zero wins recorded.")
     print ("{}. After a match, players have updated standings.")\
             .format(test_num)
