@@ -37,6 +37,8 @@ def delete_event(id):
 def delete_all_events():
     """Remove all events and all their related data from the database, 
     without erasing registered players."""
+    query = "DELETE FROM matches"
+    crud_operation(False, "delete", query, [], None, None)
     query = "DELETE FROM playersInEvent"
     crud_operation(False, "delete", query, [], None, None)
     query = "DELETE FROM events"
@@ -137,6 +139,9 @@ def player_standings(event_id):
     The first entry in the list should be the player in first place, 
     or a player tied for first place if there is currently a tie.
 
+   Args:
+      event_id: the id's event.
+ 
     Returns:
       A list of tuples, each of which contains (id, name, points, matches):
         id: the player's unique id (assigned by the database)
@@ -152,13 +157,23 @@ def player_standings(event_id):
     return rows
 
 
-def report_match(winner, loser):
+def report_match(event_id, round_number, player_one_id, player_one_points, 
+                 player_two_id, player_two_points):
     """Records the outcome of a single match between two players.
+    If a player won obtains one point, if is a tie, half point to each one
 
     Args:
-      winner:  the id number of the player who won
-      loser:  the id number of the player who lost
+      event_id: the id's event
+      round_number: The round that has played
+      player_one_id:  the id number of the first player
+      player_one_points: Number of points obtained in this match
+      player_one_id:  the id number of the second player
+      player_two_points: Number of points obtained in this match
     """
+    query = "INSERT INTO matches (player_one, player_two, player_one_score, \
+        player_two_score, event, round_number) VALUES (%s, %s, %s, %s, %s, %s)"
+    crud_operation(False, "create", query, [player_one_id, player_two_id, player_one_points,
+        player_two_points, event_id, round_number], None, False)
  
  
 def swiss_pairings():
