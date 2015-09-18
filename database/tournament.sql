@@ -48,9 +48,9 @@ RETURNS TABLE(
 	match INTEGER
 ) AS $func$
 SELECT activePlayers.id, activePlayers.name, 
-	CASE WHEN activePlayers.id = matches.player_one AND matches.player_one_score != null
+	CASE WHEN activePlayers.id = matches.player_one 
 			THEN  matches.player_one_score
-        WHEN activePlayers.id = matches.player_two AND matches.player_two_score != null
+        WHEN activePlayers.id = matches.player_two 
         THEN matches.player_two_score
         ELSE 0.0
     END as score
