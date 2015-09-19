@@ -2,6 +2,7 @@
 
 - [Tournament Management](#tournament-management)
 	- [Features](#features)
+	- [ToDo](#todo)
 - [What's included](#whats-included)
 - [Prerequisites](#prerequisites)
 	- [Installed software](#installed-software)
@@ -23,6 +24,11 @@ Tournament administrator for a variety of games, it supports [Swiss-system tourn
 * **Points earned**. Every player in a match can earn any number of points. It's useful for games where it is allowed tie, because we can add 0.5 points to each player, or stablish our own scale.
 * **Avoid rematch between players**. Every player is paired avoiding rematch between them.
 * **Support odd number of players**. If there is an odd number of players, a 'Bye' player is added. 
+
+## ToDo
+* Rank players according to OMW (Opponent Match Wins).
+* Web interface for each funcionallity.
+
 
 # What's included
 
