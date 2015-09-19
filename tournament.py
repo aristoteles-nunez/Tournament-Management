@@ -208,7 +208,7 @@ def player_standings(event_id):
     return rows
 
 
-def report_match(event_id, round_number, player_one_id, player_one_points, 
+def report_match(event_id, round_number, player_one_id, player_one_points,
                  player_two_id, player_two_points):
     """Records the outcome of a single match between two players.
     If a player won obtains one point, if is a tie, half point to each one
@@ -218,7 +218,7 @@ def report_match(event_id, round_number, player_one_id, player_one_points,
       round_number: The round that has played
       player_one_id:  the id number of the first player
       player_one_points: Number of points obtained in this match
-      player_one_id:  the id number of the second player
+      player_two_id:  the id number of the second player
       player_two_points: Number of points obtained in this match
     """
     query = "INSERT INTO matches (player_one, player_two, player_one_score, \
@@ -228,7 +228,24 @@ def report_match(event_id, round_number, player_one_id, player_one_points,
         player_one_points, player_two_points, event_id, round_number],
         None, False)
  
- 
+def have_played(player_one, player_two):
+    """Returns True if there is an existing match among players
+
+    Args:
+      player_one:  the id number of the first player
+      player_two:  the id number of the second player
+    """
+    query = "SELECT * FROM matches WHERE (player_one = %s \
+        AND player_two = %s) or (player_one = %s \
+        AND player_two = %s)"
+    rows =  crud_operation(False, "read", query, 
+            [player_one, player_two, player_two, player_one],
+             "many", None)
+    if len(rows) > 0:
+        return True
+    return False
+
+
 def swiss_pairings(event_id):
     """Returns a list of pairs of players for the next round of a match.
   
@@ -247,10 +264,22 @@ def swiss_pairings(event_id):
     """
     standings = player_standings(event_id)
     pairings = []
-    for i in range (0, len(standings), 2):
+    selected = set([])
+    for i in range (0, len(standings)):
         (id1, name1, points1, matches1) = standings[i]
-        (id2, name2, points2, matches2) = standings[i+1]
-        pairings.append((id1, name1, id2, name2))
+        if id1 not in selected:
+            # This player hasn't been selected
+            # Finding the next opponent
+            for j in range(i+1,len(standings)):
+                (id2, name2, points2, matches2) = standings[j]
+                if id2 not in selected and not have_played(id1, id2):
+                    # If they have not been selected neither 
+                    # played, we can pair them
+                    pairings.append((id1, name1, id2, name2))
+                    selected.add(id1)
+                    selected.add(id2)
+                    break
+
     return pairings
 
 
