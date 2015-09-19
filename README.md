@@ -1,8 +1,8 @@
-**Table of Contents** 
+#Table of Contents
 
 - [Tournament Management](#tournament-management)
 	- [Features](#features)
-- [What's included](#what's-included)
+- [What's included](#whats-included)
 - [Prerequisites](#prerequisites)
 	- [Installed software](#installed-software)
 	- [Database](#database)
@@ -21,6 +21,7 @@ Tournament administrator for a variety of games, it supports [Swiss-system tourn
 * **Player registration for future use**. Every player registers once and can be used in every Tournament event.
 * **Events**. We can register more than one tournament. 
 * **Points earned**. Every player in a match can earn any number of points. It's useful for games where it is allowed tie, because we can add 0.5 points to each player, or stablish our own scale.
+* **Avoid rematch between players**. Every player is paired avoiding rematch between them.
 
 # What's included
 
