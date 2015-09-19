@@ -1,16 +1,16 @@
 **Table of Contents** 
 
-- [Tournament Management](#)
-	- [Features](#)
-- [What's included](#)
-- [Prerequisites](#)
-	- [Installed software](#)
-	- [Database](#)
-		- [Creating Database](#)
-		- [Importing database schema](#)
-- [Program Execution](#)
-	- [Running test cases](#)
-- [License](#)
+- [Tournament Management](#tournament-management)
+	- [Features](#features)
+- [What's included](#what's-included)
+- [Prerequisites](#prerequisites)
+	- [Installed software](#installed-software)
+	- [Database](#database)
+		- [Creating Database](#creating-database)
+		- [Importing database schema](#importing-database-schema)
+- [Program Execution](#program-execution)
+	- [Running test cases](#running-test-cases)
+- [License](#license)
 
 
 # Tournament Management
