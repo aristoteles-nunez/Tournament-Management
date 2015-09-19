@@ -348,6 +348,29 @@ def test_prevent_rematches (test_num):
             .format(test_num)
 
 
+def test_odd_players (test_num):
+    delete_all_events()
+    delete_all_matches()
+    delete_players()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
+    player1_id = register_player("Twilight", "Sparkle")
+    player2_id = register_player("Flutter", "Shy")
+    player3_id = register_player("Aristoteles", "Nunez")
+    add_player_to_event(event_id, player1_id)
+    add_player_to_event(event_id, player2_id)
+    add_player_to_event(event_id, player3_id)
+    standings = player_standings(event_id)
+    pairings = swiss_pairings(event_id)
+    print ("\n{}\n".format(pairings))
+    standings = player_standings(event_id)
+    print ("\n{}\n".format(standings))
+    if len(standings) < 4:
+        raise ValueError("In this case there must be 4 players")
+    print ("{}. Player Bye Added")\
+            .format(test_num)   
+
+
+
 if __name__ == '__main__':
     test_delete_all_event(1)
     test_delete_one_event(2)
@@ -364,5 +387,6 @@ if __name__ == '__main__':
     test_pairings(13)
     test_tournament (14)
     test_prevent_rematches(15)
+    test_odd_players(16)
     print "Success!  All tests pass!"
 
