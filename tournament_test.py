@@ -361,12 +361,12 @@ def test_odd_players (test_num):
     add_player_to_event(event_id, player3_id)
     standings = player_standings(event_id)
     pairings = swiss_pairings(event_id)
-    print ("\n{}\n".format(pairings))
+    #print ("\n{}\n".format(pairings))
     standings = player_standings(event_id)
-    print ("\n{}\n".format(standings))
+    #print ("\n{}\n".format(standings))
     if len(standings) < 4:
         raise ValueError("In this case there must be 4 players")
-    print ("{}. Player Bye Added")\
+    print ("{}. Player Bye Added when odd number of players")\
             .format(test_num)   
 
 
@@ -388,5 +388,5 @@ if __name__ == '__main__':
     test_tournament (14)
     test_prevent_rematches(15)
     test_odd_players(16)
-    print "Success!  All tests pass!"
+    print ("Success!  All tests pass!")
 
