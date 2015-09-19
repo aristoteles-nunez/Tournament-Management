@@ -227,6 +227,7 @@ def report_match(event_id, round_number, player_one_id, player_one_points,
     crud_operation(False, "create", query, [player_one_id, player_two_id, 
         player_one_points, player_two_points, event_id, round_number],
         None, False)
+
  
 def have_played(player_one, player_two):
     """Returns True if there is an existing match among players
@@ -246,6 +247,20 @@ def have_played(player_one, player_two):
     return False
 
 
+def find_player(player_name):
+    """Returns player id if there is an existing player
+    with that name
+
+    Args:
+      player_name:  Name to find
+    """
+    query = "SELECT id FROM players WHERE firstname=%s"
+    row =  crud_operation(False, "read", query, [player_name], "one", None)
+    if row is not None:
+        return row["id"]
+    return -1
+
+
 def swiss_pairings(event_id):
     """Returns a list of pairs of players for the next round of a match.
   
@@ -263,6 +278,15 @@ def swiss_pairings(event_id):
         name2: the second player's name
     """
     standings = player_standings(event_id)
+    if len(standings) % 2 != 0:
+        # if there is a odd number of players
+        # find for player 'Bye'
+        bye_id = find_player("Bye")
+        if bye_id < 0:
+            bye_id = register_player("Bye", "")
+        add_player_to_event(event_id, bye_id)
+        standings = player_standings(event_id)
+
     pairings = []
     selected = set([])
     for i in range (0, len(standings)):
