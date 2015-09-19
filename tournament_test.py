@@ -15,6 +15,7 @@ def test_delete_all_event(test_num):
         raise ValueError("After deleting, count_events should return zero.")
     print ("{}. All events can be deleted.").format(test_num)
 
+
 def test_delete_one_event(test_num):
     delete_all_events()
     event_id = register_event("Blitz Tournament", "2015/12/30")
@@ -27,6 +28,7 @@ def test_delete_one_event(test_num):
     if c != 1:
         raise ValueError("After deleting, count_events should return one.")
     print ("{}. One event can be deleted.").format(test_num)
+
         
 def test_register_event(test_num):
     delete_all_events()
@@ -41,6 +43,7 @@ def test_register_event(test_num):
     print ("{}. After registering an event, count_events() returns 1.")\
             .format(test_num)
 
+
 def test_delete_players(test_num):
     delete_all_events()
     delete_players()
@@ -51,6 +54,7 @@ def test_delete_players(test_num):
     if c != 0:
         raise ValueError("After deleting, count_players should return zero.")
     print ("{}. All players can be deleted.").format(test_num)
+
 
 def test_register_player(test_num):
     delete_all_events()
@@ -65,6 +69,7 @@ def test_register_player(test_num):
             "After one player registers, count_players() should be 1.")
     print ("{}. After registering a player, count_players() returns 1.")\
             .format(test_num)
+
 
 def test_add_player_to_event(test_num):
     delete_all_events()
@@ -100,6 +105,7 @@ def test_remove_player_from_event(test_num):
     print ("{}. After removing a player, count_players_in_event() returns 0.")\
             .format(test_num)
 
+
 def test_delete_all_matches(test_num):
     delete_all_events()
     delete_all_matches()
@@ -111,6 +117,7 @@ def test_delete_matches_from_event(test_num):
     event_id = register_event("Blitz Tournament", "2015/12/30")
     delete_matches_from_event(event_id)
     print ("{}. All matches from event can be deleted.").format(test_num)
+
 
 def test_register_count_delete(test_num):
     delete_all_events()
@@ -220,6 +227,7 @@ def test_pairings(test_num):
     print ("{}. After one match, players with one win are paired.")\
             .format(test_num)
 
+
 def test_tournament (test_num):
     delete_all_events()
     delete_all_matches()
@@ -296,6 +304,50 @@ def test_tournament (test_num):
             .format(test_num)
 
 
+def test_prevent_rematches (test_num):
+    delete_all_events()
+    delete_all_matches()
+    delete_players()
+    event_id = register_event("Blitz Tournament", "2015/12/30")
+    player1_id = register_player("Twilight", "Sparkle")
+    player2_id = register_player("Flutter", "Shy")
+    player3_id = register_player("Aristoteles", "Nunez")
+    player4_id = register_player("Gary", "Nunez")
+    player5_id = register_player("Vladimir", "Kramnik")
+    player6_id = register_player("Sahadi", "Urbina")
+    player7_id = register_player("Itzel", "Lopez")
+    player8_id = register_player("Vladimir", "Kramnik")
+    add_player_to_event(event_id, player1_id)
+    add_player_to_event(event_id, player2_id)
+    add_player_to_event(event_id, player3_id)
+    add_player_to_event(event_id, player4_id)
+    add_player_to_event(event_id, player5_id)
+    add_player_to_event(event_id, player6_id)
+    add_player_to_event(event_id, player7_id)
+    add_player_to_event(event_id, player8_id)
+    standings = player_standings(event_id)
+    #print ("\n{}\n".format(standings))
+    # Pairings with score 0
+    pairings = swiss_pairings(event_id)
+    (p1id1, p1name1, p1id2, p1name2) = pairings[0]
+    for pair in pairings:
+        (id1, name1, id2, name2) = pair
+        report_match(event_id, 1, id1, 0.5, id2, 0.5)
+    standings = player_standings(event_id)
+    #print ("\n{}\n".format(standings))
+    # After everybody ties, the pairings must prevent rematches
+    pairings = swiss_pairings(event_id)
+    #print ("\n{}\n".format(pairings))
+    (p2id1, p2name1, p2id2, p2name2) = pairings[0]
+    round_one = set([p1id1, p1id2])
+    round_two = set([p2id1, p2id2])
+    if round_one == round_two:
+        raise ValueError(
+            "After one match players do not rematch.")
+    print ("{}. Preventing rematches between players")\
+            .format(test_num)
+
+
 if __name__ == '__main__':
     test_delete_all_event(1)
     test_delete_one_event(2)
@@ -311,6 +363,6 @@ if __name__ == '__main__':
     test_report_matches(12)
     test_pairings(13)
     test_tournament (14)
+    test_prevent_rematches(15)
     print "Success!  All tests pass!"
-
 
