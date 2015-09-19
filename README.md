@@ -1,5 +1,19 @@
+**Table of Contents** 
+
+- [Tournament Management](#)
+	- [Features](#)
+- [What's included](#)
+- [Prerequisites](#)
+	- [Installed software](#)
+	- [Database](#)
+		- [Creating Database](#)
+		- [Importing database schema](#)
+- [Program Execution](#)
+	- [Running test cases](#)
+- [License](#)
+
+
 # Tournament Management
-****
 
 Tournament administrator for a variety of games, it supports [Swiss-system tournament][2] that is used for non-elimination format like chess tournaments.
 
@@ -9,7 +23,6 @@ Tournament administrator for a variety of games, it supports [Swiss-system tourn
 * **Points earned**. Every player in a match can earn any number of points. It's useful for games where it is allowed tie, because we can add 0.5 points to each player, or stablish our own scale.
 
 # What's included
-****
 
 Within the download you'll find the following directories and files:
 
@@ -22,7 +35,7 @@ Tournament-Management-master/
 ```	
 
 # Prerequisites
-****
+
 ## Installed software
 * `Python 2.7`
 * `PostgreSQL 9.0` or higher. View [PostgreSQL Download and Install Instructions][4]
@@ -51,7 +64,7 @@ And import `tournament.sql` file with:
 **Note:** You must be in the same system directory where all the files are, in this case, you must be inside of `Tournament-Management-master` folder.
 
 # Program Execution
-****
+
 
 ## Running test cases
 In order to execute all the test cases run:
@@ -69,7 +82,7 @@ Success!  All tests pass!
 If there is any problem verify that you accomplish with all pre-requisites.
 
 # License
-****
+
 
 [The MIT License (MIT)][1]
 
