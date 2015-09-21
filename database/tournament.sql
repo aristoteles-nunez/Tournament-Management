@@ -1,5 +1,8 @@
 -- Table definitions for the tournament project.
 --
+DROP DATABASE IF EXISTS tournament;
+CREATE DATABASE tournament;
+\c tournament;
 
 -- Containtais all the players registered in database
 -- It stores the lastname and firstname separately 
