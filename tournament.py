@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# 
+#
 # tournament.py -- implementation of a Swiss-system tournament
 #
 
@@ -46,7 +46,7 @@ def crud_operation(is_proc, operation, query, params, expected_rows,
             rows = c.fetchone()
     db.commit()
     db.close()
-    return rows;
+    return rows
 
 
 def delete_event(event_id):
@@ -305,6 +305,3 @@ def swiss_pairings(event_id):
                     break
 
     return pairings
-
-
-
