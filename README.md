@@ -7,8 +7,6 @@
 - [Prerequisites](#prerequisites)
 	- [Installed software](#installed-software)
 	- [Database](#database)
-		- [Creating Database](#creating-database)
-		- [Importing database schema](#importing-database-schema)
 - [Program Execution](#program-execution)
 	- [Running test cases](#running-test-cases)
 - [License](#license)
@@ -51,25 +49,20 @@ Tournament-Management-master/
 
 ## Database
 
-### Creating Database
-In order to run the program you must create the database named `tournament` using the following sql command:
+In order to run the program you must import database schema
+
+First move to proper directory
 
 ```
-> CREATE DATABASE tournament;
+cd path-to/Tournament-Management-master/
 ```
 
-### Importing database schema
-Once the database is created you must connect to it:
-
-```
-> \c tournament;
-```
-And import `tournament.sql` file with:
+Ingress to database and import `tournament.sql` file with:
 
 ```
 > \i database/tournament.sql;
 ```
-**Note:** You must be in the same system directory where all the files are, in this case, you must be inside of `Tournament-Management-master` folder.
+**Note:** You must be in the same system directory where all the files are, in this case, you must be inside of `Tournament-Management-master` folder. The tournament.sql will create the required database.
 
 # Program Execution
 
