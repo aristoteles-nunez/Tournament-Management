@@ -214,7 +214,7 @@ def test_pairings(test_num):
     [id1, id2, id3, id4] = [row[0] for row in standings]
     report_match(event_id, 1, id1, 1.0, id2, 0.0)
     report_match(event_id, 1, id3, 1.0, id4, 0.0)
-    pairings = swiss_pairings(event_id)
+    pairings = swiss_pairings(event_id, 1)
     if len(pairings) != 2:
         raise ValueError(
             "For four players, swissPairings should return two pairs.")
@@ -267,25 +267,25 @@ def test_tournament (test_num):
     add_player_to_event(event_id, player16_id)
     standings = player_standings(event_id)
     #print ("\n{}\n".format(standings))
-    pairings = swiss_pairings(event_id)
+    pairings = swiss_pairings(event_id, 1)
     for pair in pairings:
         (id1, name1, id2, name2) = pair
         report_match(event_id, 1, id1, 1.0, id2, 0.0)
     standings = player_standings(event_id)
     #print ("\n{}\n".format(standings))
-    pairings = swiss_pairings(event_id)
+    pairings = swiss_pairings(event_id, 2)
     for pair in pairings:
         (id1, name1, id2, name2) = pair
         report_match(event_id, 2, id1, 1.0, id2, 0.0)
     standings = player_standings(event_id)
     #print ("\n{}\n".format(standings))
-    pairings = swiss_pairings(event_id)
+    pairings = swiss_pairings(event_id, 3)
     for pair in pairings:
         (id1, name1, id2, name2) = pair
         report_match(event_id, 3, id1, 1.0, id2, 0.0)
     standings = player_standings(event_id)
     #print ("\n{}\n".format(standings))
-    pairings = swiss_pairings(event_id)
+    pairings = swiss_pairings(event_id, 4)
     for pair in pairings:
         (id1, name1, id2, name2) = pair
         report_match(event_id, 4, id1, 0.0, id2, 1.0)
@@ -328,7 +328,7 @@ def test_prevent_rematches (test_num):
     standings = player_standings(event_id)
     #print ("\n{}\n".format(standings))
     # Pairings with score 0
-    pairings = swiss_pairings(event_id)
+    pairings = swiss_pairings(event_id, 1)
     (p1id1, p1name1, p1id2, p1name2) = pairings[0]
     for pair in pairings:
         (id1, name1, id2, name2) = pair
@@ -336,7 +336,7 @@ def test_prevent_rematches (test_num):
     standings = player_standings(event_id)
     #print ("\n{}\n".format(standings))
     # After everybody ties, the pairings must prevent rematches
-    pairings = swiss_pairings(event_id)
+    pairings = swiss_pairings(event_id, 2)
     #print ("\n{}\n".format(pairings))
     (p2id1, p2name1, p2id2, p2name2) = pairings[0]
     round_one = set([p1id1, p1id2])
@@ -360,7 +360,7 @@ def test_odd_players (test_num):
     add_player_to_event(event_id, player2_id)
     add_player_to_event(event_id, player3_id)
     standings = player_standings(event_id)
-    pairings = swiss_pairings(event_id)
+    pairings = swiss_pairings(event_id, 1)
     #print ("\n{}\n".format(pairings))
     standings = player_standings(event_id)
     #print ("\n{}\n".format(standings))
