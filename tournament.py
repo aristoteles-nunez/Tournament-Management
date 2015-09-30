@@ -63,6 +63,8 @@ def delete_event(event_id):
 def delete_all_events():
     """Remove all events and all their related data from the database, 
     without erasing registered players."""
+    query = "DELETE FROM pairings"
+    crud_operation(False, "delete", query, [], None, None)
     query = "DELETE FROM matches"
     crud_operation(False, "delete", query, [], None, None)
     query = "DELETE FROM playersInEvent"
@@ -228,24 +230,6 @@ def report_match(event_id, round_number, player_one_id, player_one_points,
         player_one_points, player_two_points, event_id, round_number],
         None, False)
 
- 
-def have_played(player_one, player_two):
-    """Returns True if there is an existing match among players
-
-    Args:
-      player_one:  the id number of the first player
-      player_two:  the id number of the second player
-    """
-    query = "SELECT * FROM matches WHERE (player_one = %s \
-        AND player_two = %s) or (player_one = %s \
-        AND player_two = %s)"
-    rows =  crud_operation(False, "read", query, 
-            [player_one, player_two, player_two, player_one],
-             "many", None)
-    if len(rows) > 0:
-        return True
-    return False
-
 
 def find_player(player_name):
     """Returns player id if there is an existing player
@@ -260,8 +244,16 @@ def find_player(player_name):
         return row["id"]
     return -1
 
+def insert_player_bye(event_id):
+    """ Insert Player Bye to have an even number of players
+    in the current event
+    """ 
+    bye_id = find_player("Bye")
+    if bye_id < 0:
+        bye_id = register_player("Bye", "")
+    add_player_to_event(event_id, bye_id)
 
-def swiss_pairings(event_id):
+def swiss_pairings(event_id, round_number):
     """Returns a list of pairs of players for the next round of a match.
   
     Assuming that there are an even number of players registered, each player
@@ -277,31 +269,13 @@ def swiss_pairings(event_id):
         id2: the second player's unique id
         name2: the second player's name
     """
-    standings = player_standings(event_id)
-    if len(standings) % 2 != 0:
-        # if there is a odd number of players
-        # find for player 'Bye'
-        bye_id = find_player("Bye")
-        if bye_id < 0:
-            bye_id = register_player("Bye", "")
-        add_player_to_event(event_id, bye_id)
-        standings = player_standings(event_id)
+    players_number = count_players_in_event(event_id)
+    if players_number % 2 != 0:
+        insert_player_bye(event_id)
+        players_number = count_players_in_event(event_id)
 
-    pairings = []
-    selected = set([])
-    for i in range (0, len(standings)):
-        (id1, name1, points1, matches1) = standings[i]
-        if id1 not in selected:
-            # This player hasn't been selected
-            # Finding the next opponent
-            for j in range(i+1,len(standings)):
-                (id2, name2, points2, matches2) = standings[j]
-                if id2 not in selected and not have_played(id1, id2):
-                    # If they have not been selected neither 
-                    # played, we can pair them
-                    pairings.append((id1, name1, id2, name2))
-                    selected.add(id1)
-                    selected.add(id2)
-                    break
-
-    return pairings
+    procedure = "makeAllPairs"
+    rows =  crud_operation(True, "read", procedure, [event_id, round_number, 
+                           players_number], "all", None)
+    #print ("\nPairings:{}\n".format(rows))
+    return rows
