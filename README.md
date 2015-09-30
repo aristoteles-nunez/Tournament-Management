@@ -22,7 +22,7 @@ Tournament administrator for a variety of games, it supports [Swiss-system tourn
 * **Points earned**. Every player in a match can earn any number of points. It's useful for games where it is allowed tie, because we can add 0.5 points to each player, or stablish our own scale.
 * **Avoid rematch between players**. Every player is paired avoiding rematch between them.
 * **Support odd number of players**. If there is an odd number of players, a 'Bye' player is added. 
-* **Pairing stored for every round**. Each pairing is stored on database with the each player's points for that round.
+* **Pairing stored for every round**. Each pairing is stored on database with each player's score for that round.
 
 ## ToDo
 * Rank players according to OMW (Opponent Match Wins).
