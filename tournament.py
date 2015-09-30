@@ -8,15 +8,15 @@ import psycopg2.extras
 
 
 def connect():
-    """Connect to the PostgreSQL database.  
+    """Connect to the PostgreSQL database.
 
     Returns:
       A database connection."""
     return psycopg2.connect("dbname=tournament")
 
 
-def crud_operation(is_proc, operation, query, params, expected_rows, 
-                    has_return_id):
+def crud_operation(is_proc, operation, query, params, expected_rows,
+                   has_return_id):
     """Perform CRUD operations on database
 
    Args:
@@ -28,7 +28,7 @@ def crud_operation(is_proc, operation, query, params, expected_rows,
       has_return_id: True if we make an INSERT and the new id must return
     Returns:
       None: If the operation does not generate any result
-      row: If a single row is returned, it can be the generated key 
+      row: If a single row is returned, it can be the generated key
            from last INSERT
       rows: If multiple rows are returned
     """
@@ -50,7 +50,7 @@ def crud_operation(is_proc, operation, query, params, expected_rows,
 
 
 def delete_event(event_id):
-    """Remove an event and all its related data from the database, without 
+    """Remove an event and all its related data from the database, without
     erasing registered players.
 
     Args:
@@ -61,7 +61,7 @@ def delete_event(event_id):
 
 
 def delete_all_events():
-    """Remove all events and all their related data from the database, 
+    """Remove all events and all their related data from the database,
     without erasing registered players."""
     query = "DELETE FROM pairings"
     crud_operation(False, "delete", query, [], None, None)
@@ -97,9 +97,9 @@ def delete_players():
 
 def register_event(name, event_date):
     """Adds a new event to the tournament database.
-  
-    The database assigns a unique serial id number for the event. 
-  
+
+    The database assigns a unique serial id number for the event.
+
     Args:
       name: the event's full name (need not be unique).
       event_date: this date could be in a future time.
@@ -120,7 +120,7 @@ def count_events():
       num: Total number of events in the database
     """
     query = "SELECT count(*) as num FROM events"
-    row =  crud_operation(False, "read", query, [], "one", None)
+    row = crud_operation(False, "read", query, [], "one", None)
     return row["num"]
 
 
@@ -131,16 +131,16 @@ def count_players():
       num: Total number of players registered in the database
     """
     query = "SELECT count(*) as num FROM players"
-    row =  crud_operation(False, "read", query, [], "one", None)
+    row = crud_operation(False, "read", query, [], "one", None)
     return row["num"]
 
 
 def register_player(firstname, lastname):
     """Adds a player to the tournament database.
-  
+
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
-  
+
     Args:
       firstname: the player's firstname (need not be unique).
       lastname: the player's lastname (need not be unique).
@@ -156,7 +156,7 @@ def register_player(firstname, lastname):
 
 def add_player_to_event(event_id, player_id):
     """Adds a player into an existing event.
-  
+
     Args:
       event_id: the id's event.
       player_id: the id's player.
@@ -167,7 +167,7 @@ def add_player_to_event(event_id, player_id):
 
 def remove_player_from_event(event_id, player_id):
     """Removes a single player from an existing event.
-  
+
     Args:
       event_id: the id's event.
       player_id: the id's player.
@@ -185,7 +185,7 @@ def count_players_in_event(event_id):
       num: Number of players in the event
     """
     query = "SELECT count(*) as num FROM playersInEvent WHERE event=%s"
-    row =  crud_operation(False, "read", query, [event_id], "one", None)
+    row = crud_operation(False, "read", query, [event_id], "one", None)
     return row["num"]
 
 
@@ -193,7 +193,7 @@ def player_standings(event_id):
     """Returns a list of the players and their win records, sorted by
     ontained points from an event.
 
-    The first entry in the list should be the player in first place, 
+    The first entry in the list should be the player in first place,
     or a player tied for first place if there is currently a tie.
 
    Args:
@@ -206,7 +206,7 @@ def player_standings(event_id):
         matches: the number of matches the player has played
     """
     procedure = "standings"
-    rows =  crud_operation(True, "read", procedure, [event_id], "all", None)
+    rows = crud_operation(True, "read", procedure, [event_id], "all", None)
     return rows
 
 
@@ -226,9 +226,10 @@ def report_match(event_id, round_number, player_one_id, player_one_points,
     query = "INSERT INTO matches (player_one, player_two, player_one_score, \
              player_two_score, event, round_number) \
              VALUES (%s, %s, %s, %s, %s, %s)"
-    crud_operation(False, "create", query, [player_one_id, player_two_id, 
-        player_one_points, player_two_points, event_id, round_number],
-        None, False)
+    crud_operation(False, "create", query, [player_one_id, player_two_id,
+                   player_one_points, player_two_points, event_id,
+                   round_number],
+                   None, False)
 
 
 def find_player(player_name):
@@ -239,23 +240,25 @@ def find_player(player_name):
       player_name:  Name to find
     """
     query = "SELECT id FROM players WHERE firstname=%s"
-    row =  crud_operation(False, "read", query, [player_name], "one", None)
+    row = crud_operation(False, "read", query, [player_name], "one", None)
     if row is not None:
         return row["id"]
     return -1
 
+
 def insert_player_bye(event_id):
     """ Insert Player Bye to have an even number of players
     in the current event
-    """ 
+    """
     bye_id = find_player("Bye")
     if bye_id < 0:
         bye_id = register_player("Bye", "")
     add_player_to_event(event_id, bye_id)
 
+
 def swiss_pairings(event_id, round_number):
     """Returns a list of pairs of players for the next round of a match.
-  
+
     Assuming that there are an even number of players registered, each player
     appears exactly once in the pairings.  Each player is paired with another
     player with an equal or nearly-equal win record, that is, a player adjacent
@@ -275,7 +278,7 @@ def swiss_pairings(event_id, round_number):
         players_number = count_players_in_event(event_id)
 
     procedure = "makeAllPairs"
-    rows =  crud_operation(True, "read", procedure, [event_id, round_number, 
-                           players_number], "all", None)
-    #print ("\nPairings:{}\n".format(rows))
+    rows = crud_operation(True, "read", procedure, [event_id, round_number,
+                          players_number], "all", None)
+#    print ("\nPairings:{}\n".format(rows))
     return rows
